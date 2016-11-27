@@ -1,23 +1,15 @@
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.openqa.selenium.*;
 import org.testng.Assert;
+
 import java.util.concurrent.TimeUnit;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.Select;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 
 public class TestBase {
-
-    private static WebDriver driver;
+    protected WebDriver driver;
+   // private static WebDriver driver;
     private static String baseUrl;
     private static boolean acceptNextAlert = true;
     private static StringBuffer verificationErrors = new StringBuffer();
@@ -25,12 +17,39 @@ public class TestBase {
     @BeforeTest
     public void setUp() throws Exception {
         driver = new FirefoxDriver();
-        baseUrl = " http://localhost/litecart/";
-    }
+       // driver = new InternetExplorerDriver();
 
+
+
+
+
+
+
+        baseUrl = "http://localhost/litecart/";
+
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.MINUTES);
+
+
+
+
+
+
+    }
+    protected   boolean isElementPresent(By locator) {
+        try {
+            driver.findElement(locator);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
 
     protected void openMainPage() {
         driver.get(baseUrl + "admin/");
+    }
+    protected void openShopPage() {
+        driver.get(baseUrl);
     }
 
     protected void fillLoginForm(LoginData loginData) {
@@ -42,6 +61,18 @@ public class TestBase {
 
     protected void clickLogin() {
         driver.findElement(By.name("login")).click();
+    }
+
+
+
+    protected WebElement find(String locator, int index) {
+        return  driver.findElements(By.cssSelector(locator)).get(index);
+    }
+    protected int findSize(String locator) {
+        return  driver.findElements(By.cssSelector(locator)).size();
+    }
+    protected void click(String locator, int index) {
+        find(locator, index).click();
     }
 
     @AfterTest
